@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DrawingContracts.Dto.RemoveUser
+﻿namespace DrawingContracts.Dto.RemoveUser
 {
     public class RemoveUserResponseOk:RemoveUserResponse
     {

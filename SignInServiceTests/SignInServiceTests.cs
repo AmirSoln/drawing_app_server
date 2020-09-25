@@ -1,8 +1,4 @@
-using DrawingContracts.Dto;
-using DrawingContracts.Dto.SignIn;
-using DrawingDal;
 using NUnit.Framework;
-using SignInService;
 
 namespace SignInServiceTests
 {

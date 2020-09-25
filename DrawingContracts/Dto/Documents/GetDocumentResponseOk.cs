@@ -8,5 +8,6 @@
         }
 
         public Document Doc { get; set; }
+        public byte[] Image { get; set; }
     }
 }

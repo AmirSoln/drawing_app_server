@@ -25,6 +25,13 @@ namespace DrawingsWebApi.Controllers
             return _documentService.GetDocumentById(id);
         }
 
+        [Route("api/[controller]/[action]/{owner}")]
+        [HttpGet]
+        public Response GetAllDocuments(string owner)
+        {
+            return _documentService.GetAllDocuments(owner);
+        }
+
 
         // POST api/<DocumentsController>
         [Route("api/[controller]/[action]")]

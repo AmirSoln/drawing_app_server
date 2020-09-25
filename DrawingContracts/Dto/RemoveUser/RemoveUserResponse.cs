@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DIContracts.Dto;
+﻿using DIContracts.Dto;
 
 namespace DrawingContracts.Dto.RemoveUser
 {

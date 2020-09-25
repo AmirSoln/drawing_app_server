@@ -8,5 +8,6 @@ namespace DrawingContracts.Interface
         Response UploadDocument(string documentName, string filePath, string userId);
         GetDocumentResponse GetDocumentById(string id);
         Response DeleteDocumentById(DeleteDocumentRequest request);
+        Response GetAllDocuments(string owner);
     }
 }

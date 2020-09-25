@@ -2,6 +2,6 @@
 {
     public class DeleteDocumentRequest
     {
-        public Document Document { get; set; }
+        public string DocId { get; set; }
     }
 }

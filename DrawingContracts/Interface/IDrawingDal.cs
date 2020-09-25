@@ -17,5 +17,6 @@ namespace DrawingContracts.Interface
         void CreateMarker(CreateMarkerRequest request);
         void DeleteMarker(string markerId);
         DataSet GetAllMarkers(string documentId);
+        DataSet GetAllDocuments(string owner);
     }
 }

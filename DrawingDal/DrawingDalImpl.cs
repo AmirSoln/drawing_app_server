@@ -20,10 +20,9 @@ namespace DrawingDal
         private readonly IInfraDal _infraDal;
         private readonly IDbConnection _connection;
         private readonly IConfiguration _configuration;
-        public DrawingDalImpl(IConfiguration configuration)// TODO:change to IConfiguration
+        public DrawingDalImpl(IConfiguration configuration)// TODO:change to IConfiguration - COMPLETED
         {
             _configuration = configuration;
-            //var strConn = "Data Source=(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521)))(CONNECT_DATA=(SERVER=DEDICATED)(SERVICE_NAME=XE)));User Id=DRAWINGS;Password=q1w2e3;";
             var strConn = _configuration.GetConnectionString("mainDb");
             _infraDal = new InfraDalImpl();
             _connection = _infraDal.Connect(strConn);
@@ -72,10 +71,10 @@ namespace DrawingDal
         public bool UploadDocument(string docId, string userId, string filePath, string documentName)
         {
             //CREATE_DOCUMENT
-            var paramDocId = _infraDal.GetParameter("p_DOC_ID",docId);
-            var paramUserId = _infraDal.GetParameter("p_DOC_OWNER",userId);
-            var paramDocName = _infraDal.GetParameter("p_DOC_NAME",documentName);
-            var paramDocUrl = _infraDal.GetParameter("p_IMAGE_URL",filePath);
+            var paramDocId = _infraDal.GetParameter("p_DOC_ID", docId);
+            var paramUserId = _infraDal.GetParameter("p_DOC_OWNER", userId);
+            var paramDocName = _infraDal.GetParameter("p_DOC_NAME", documentName);
+            var paramDocUrl = _infraDal.GetParameter("p_IMAGE_URL", filePath);
             //var paramDocId = new OracleParameterAdapter() { Value = docId, ParameterName = "p_DOC_ID" };
             //var paramUserId = new OracleParameterAdapter() { Value = userId, ParameterName = "p_DOC_OWNER" };
             //var paramDocName = new OracleParameterAdapter() { Value = documentName, ParameterName = "p_DOC_NAME" };
@@ -102,7 +101,7 @@ namespace DrawingDal
 
         public void DeleteDocument(DeleteDocumentRequest request)
         {
-            var paramDocId = _infraDal.GetParameter("p_DOCUMENT_ID", request.Document.DocId);
+            var paramDocId = _infraDal.GetParameter("p_DOCUMENT_ID", request.DocId);
             //var paramDocId = new OracleParameterAdapter() { Value = request.Document.DocId, ParameterName = "p_DOCUMENT_ID" };
 
             _infraDal.ExecuteSpQuery(_connection, "REMOVE_DOCUMENT", paramDocId);
@@ -110,12 +109,12 @@ namespace DrawingDal
 
         public void CreateMarker(CreateMarkerRequest request)
         {
-            var paramDocId    = _infraDal.GetParameter("p_DOC_ID",request.Marker.DocId);
-            var paramUserId   = _infraDal.GetParameter("p_OWNER_USER_ID",request.Marker.OwnerUser);
-            var paramMarkerId = _infraDal.GetParameter("p_MARKER_ID",request.Marker.MarkerId);
-            var paramPos      = _infraDal.GetParameter("p_POS",request.Marker.Position);
-            var paramMarkType = _infraDal.GetParameter("p_MARK_TYPE",request.Marker.MarkerType.ToString());
-            var paramColor    = _infraDal.GetParameter("p_COLOR",request.Marker.Color);
+            var paramDocId = _infraDal.GetParameter("p_DOC_ID", request.Marker.DocId);
+            var paramUserId = _infraDal.GetParameter("p_OWNER_USER_ID", request.Marker.OwnerUser);
+            var paramMarkerId = _infraDal.GetParameter("p_MARKER_ID", request.Marker.MarkerId);
+            var paramPos = _infraDal.GetParameter("p_POS", request.Marker.Position);
+            var paramMarkType = _infraDal.GetParameter("p_MARK_TYPE", request.Marker.MarkerType.ToString());
+            var paramColor = _infraDal.GetParameter("p_COLOR", request.Marker.Color);
             //var paramDocId    = new OracleParameterAdapter { Value = request.Marker.DocId, ParameterName = "p_DOC_ID" };
             //var paramUserId   = new OracleParameterAdapter { Value = request.Marker.OwnerUser, ParameterName = "p_OWNER_USER_ID" };
             //var paramMarkerId = new OracleParameterAdapter { Value = request.Marker.MarkerId, ParameterName = "p_MARKER_ID" };
@@ -147,6 +146,14 @@ namespace DrawingDal
             //    ParameterName = "o_RETVAL"
             //};
             return _infraDal.ExecuteSpQuery(_connection, "GET_MARKERS", paramDocId, outParam);
+        }
+
+        public DataSet GetAllDocuments(string owner)
+        {
+            var paramDocOwner = _infraDal.GetParameter("P_OWNER_ID", owner);
+            var outParam = _infraDal.GetOutParameter("RETVAL");
+
+            return _infraDal.ExecuteSpQuery(_connection, "GET_DOCUMENTS_OF_OWNER", paramDocOwner, outParam);
         }
     }
 }
