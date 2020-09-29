@@ -17,6 +17,7 @@ namespace InfraDal
         {
             DataSet ds = new DataSet();
             OracleDataAdapter da = new OracleDataAdapter(command);
+            
             da.Fill(ds);
             return ds;
         }

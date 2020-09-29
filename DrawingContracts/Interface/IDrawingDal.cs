@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using DrawingContracts.Dto.Documents;
 using DrawingContracts.Dto.Markers;
+using DrawingContracts.Dto.Sharing;
 using DrawingContracts.Dto.SignIn;
 using DrawingContracts.Dto.SignUp;
 
@@ -18,5 +19,9 @@ namespace DrawingContracts.Interface
         void DeleteMarker(string markerId);
         DataSet GetAllMarkers(string documentId);
         DataSet GetAllDocuments(string owner);
+        DataSet GetSharedDocument(string userId);
+        void ShareDocument(ShareDocumentRequest request);
+        DataSet GetAllUsers();
+        DataSet GetSharedUserByDocumentId(string requestDocId);
     }
 }

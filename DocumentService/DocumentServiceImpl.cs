@@ -83,10 +83,8 @@ namespace DocumentService
         {
             try
             {
-                // Check if file exists with its full path    
                 if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", document)))
                 {
-                    // If file found, delete it    
                     File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", document));
                     Console.WriteLine("File deleted.");
                 }
