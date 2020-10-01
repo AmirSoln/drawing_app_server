@@ -36,25 +36,32 @@ namespace DocumentService
             return response;
         }
 
-        public GetDocumentResponse GetDocumentById(string id)
+        public Response GetDocumentById(string id)
         {
-            GetDocumentResponse response;
-            var document = _drawingDal.GetDocumentById(id);
-            if (document.Tables[0].Rows.Count == 1)
+            Response response;
+            try
             {
-                var row = document.Tables[0].Rows[0];
-                response = new GetDocumentResponseOk(ConvertRowToDocumentObject(row));
-                AddFileToResponse(response);
+                var document = _drawingDal.GetDocumentById(id);
+                if (document.Tables[0].Rows.Count == 1)
+                {
+                    var row = document.Tables[0].Rows[0];
+                    response = new GetDocumentResponseOk(ConvertRowToDocumentObject(row));
+                    AddFileToResponse(response);
+                }
+                else
+                {
+                    response = new GetDocumentResponseInvalidId();
+                }
             }
-            else
+            catch (Exception e)
             {
-                response = new GetDocumentResponseInvalidId();
+                response = new AppResponseError(e.Message);
             }
 
             return response;
         }
 
-        private void AddFileToResponse(GetDocumentResponse response)
+        private void AddFileToResponse(Response response)
         {
             var castResponse = (GetDocumentResponseOk)response;
             var bytes = File.ReadAllBytes(castResponse.Doc.DocUrl);

@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using InfraDalContracts;
 using Oracle.ManagedDataAccess.Client;
 using IDbConnection = InfraDalContracts.IDbConnection;
@@ -15,9 +16,8 @@ namespace InfraDal
 
         private DataSet getDataSet(OracleCommand command)
         {
-            DataSet ds = new DataSet();
             OracleDataAdapter da = new OracleDataAdapter(command);
-            
+            DataSet ds = new DataSet();
             da.Fill(ds);
             return ds;
         }
@@ -49,7 +49,7 @@ namespace InfraDal
 
         public IDbParameter GetParameter(string parameterName, object value)
         {
-            return new OracleParameterAdapter{ Value = value, ParameterName = parameterName };
+            return new OracleParameterAdapter { Value = value, ParameterName = parameterName };
         }
 
         public IDbParameter GetOutParameter(string parameterName)
@@ -57,7 +57,8 @@ namespace InfraDal
             var param = new OracleParameterAdapter
             {
                 ParameterName = parameterName,
-                Parameter = {Direction = ParameterDirection.Output, OracleDbType = OracleDbType.RefCursor}
+                Parameter = { Direction = ParameterDirection.Output, OracleDbType = OracleDbType.RefCursor },
+                Value = DBNull.Value
             };
             return param;
 

@@ -20,7 +20,7 @@ namespace DrawingsWebApi.Controllers
 
         [Route("api/[controller]/[action]/{id}")]
         [HttpGet]
-        public GetDocumentResponse GetDocumentById(string id)
+        public Response GetDocumentById(string id)
         {
             return _documentService.GetDocumentById(id);
         }
