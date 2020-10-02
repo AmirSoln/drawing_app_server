@@ -2,6 +2,6 @@
 {
     public class DeleteMarkerRequest
     {
-        public Marker Marker { get; set; }
+        public string MarkerId { get; set; }
     }
 }

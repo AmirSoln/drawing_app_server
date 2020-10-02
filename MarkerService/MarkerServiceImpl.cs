@@ -40,7 +40,7 @@ namespace MarkerService
             Response response = new DeleteMarkerResponseOk(request);
             try
             {
-                _drawingDal.DeleteMarker(request.Marker.MarkerId);
+                _drawingDal.DeleteMarker(request.MarkerId);
             }
             catch (Exception e)
             {

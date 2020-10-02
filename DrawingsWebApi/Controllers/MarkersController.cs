@@ -36,7 +36,7 @@ namespace DrawingsWebApi.Controllers
         // POST api/<MarkersController>/DeleteMarker
         [Route("api/[controller]/[action]")]
         [HttpPost]
-        public Response DeleteMarker([FromBody] DeleteMarkerRequest request)
+        public Response DeleteMarkerById([FromBody] DeleteMarkerRequest request)
         {
             return _markerService.DeleteMarker(request);
         }
