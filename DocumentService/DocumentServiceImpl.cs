@@ -93,7 +93,6 @@ namespace DocumentService
                 if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", document)))
                 {
                     File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "images", document));
-                    Console.WriteLine("File deleted.");
                 }
                 else Console.WriteLine("File not found");
             }

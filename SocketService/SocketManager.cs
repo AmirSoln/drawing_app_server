@@ -2,10 +2,13 @@
 using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
+using DIContracts.Attribute;
+using DrawingContracts.Interface;
 
 namespace SocketService
 {
-    public class SocketManager
+    [Register(Policy.Singleton, typeof(ISocketManager))]
+    public class SocketManager : ISocketManager
     {
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, WebSocket>> _connections;
 
@@ -37,7 +40,10 @@ namespace SocketService
             {
                 if (userConcurrentDictionary.TryGetValue(userId, out var socket))
                 {
-                    await socket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                    if (socket.State == WebSocketState.Open)
+                    {
+                        await socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                    }
                 }
 
                 userConcurrentDictionary.TryRemove(userId, out _);
@@ -62,7 +68,7 @@ namespace SocketService
             return retval;
         }
 
-        public ConcurrentDictionary<string,WebSocket> GetAll(string docId)
+        public ConcurrentDictionary<string, WebSocket> GetAll(string docId)
         {
             if (_connections.TryGetValue(docId, out var docSockets))
             {

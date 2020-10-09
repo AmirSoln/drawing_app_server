@@ -3,14 +3,15 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DrawingContracts.Interface;
 
 namespace SocketService
 {
-    public abstract class WebSocketHandler
+    public abstract class WebSocketHandler:IWebSocketHandler
     {
-        protected SocketManager WebSocketManager { get; set; }
+        protected ISocketManager WebSocketManager { get; set; }
 
-        public WebSocketHandler(SocketManager webSocketConnectionManager)
+        public WebSocketHandler(ISocketManager webSocketConnectionManager)
         {
             WebSocketManager = webSocketConnectionManager;
         }

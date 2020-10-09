@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DI;
 using DIContracts.Interface;
+using DrawingContracts.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -29,10 +30,6 @@ namespace DrawingsWebApi
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dlls");
             var resolver = new Resolver(path, services);
 
-            //TODO:change to dlls
-            services.AddSingleton<SocketManager>();
-            services.AddSingleton<DrawingShareHandler>();
-
             services.AddSingleton<IResolver>(sp => resolver);
             services.AddControllers();
             services.AddSwaggerGen();
@@ -56,7 +53,7 @@ namespace DrawingsWebApi
                         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         var docId = context.Request.Query["docId"];
                         var userId = context.Request.Query["userId"];
-                        var manager = app.ApplicationServices.GetService<DrawingShareHandler>();
+                        var manager = app.ApplicationServices.GetService<IWebSocketHandler>();
                         await manager.OnConnected(docId,userId,webSocket);
 
                         await Receive(webSocket, async(result, buffer) =>

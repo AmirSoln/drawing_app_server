@@ -4,13 +4,16 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using DIContracts.Attribute;
 using DrawingContracts.Dto.SocketDto;
+using DrawingContracts.Interface;
 
 namespace SocketService
 {
+    [Register(Policy.Singleton,typeof(IWebSocketHandler))]
     public class DrawingShareHandler : WebSocketHandler
     {
-        public DrawingShareHandler(SocketManager webSocketConnectionManager) : base(webSocketConnectionManager)
+        public DrawingShareHandler(ISocketManager webSocketConnectionManager) : base(webSocketConnectionManager)
         {
         }
 
