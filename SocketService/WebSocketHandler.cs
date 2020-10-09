@@ -49,7 +49,7 @@ namespace SocketService
             var webSockets = WebSocketManager.GetAll(docId);
             if (webSockets != null)
             {
-                foreach (var (key, value) in webSockets)
+                foreach (var (_, value) in webSockets)
                 {
                     if (value.State == WebSocketState.Open)
                         await SendMessageAsync(value, message);

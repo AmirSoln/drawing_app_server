@@ -46,7 +46,7 @@ namespace SharingService
             try
             {
                 var user = _drawingDal.GetUser(new SignInRequest
-                { LoginDto = new LoginDTO { Email = request.UserId } });
+                { LoginDto = new LoginDto { Email = request.UserId } });
                 if (user.Tables[0].Rows.Count > 0)
                 {
                     _drawingDal.ShareDocument(request);

@@ -2,6 +2,6 @@
 {
     public class SignUpRequest
     {
-        public LoginDTO Login { get; set; }
+        public LoginDto Login { get; set; }
     }
 }

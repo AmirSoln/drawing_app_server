@@ -31,16 +31,14 @@ namespace DrawingDal
 
         public bool CreateUser(SignUpRequest request)
         {
-            //TODO:Change to GetParameter function - COMPLETED
             var email = _infraDal.GetParameter("P_EMAIL", request.Login.Email);
             var username = _infraDal.GetParameter("P_USER_NAME", request.Login.Username);
 
             try
             {
-                //TODO:Move this try catch somewhere else... logic is not needed here
                 _infraDal.ExecuteSpQuery(_connection, "CREATE_USER", email, username);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

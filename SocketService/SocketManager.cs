@@ -19,7 +19,7 @@ namespace SocketService
 
         public bool AddConnection(string docId, string userId, WebSocket webSocket)
         {
-            bool retval = false;
+            bool retval;
             if (!_connections.ContainsKey(docId))
             {
                 var usersToSocket = new ConcurrentDictionary<string, WebSocket>();

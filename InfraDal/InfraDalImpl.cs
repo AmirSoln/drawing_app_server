@@ -28,12 +28,12 @@ namespace InfraDal
             {
                 CommandText = spName,
                 CommandType = CommandType.StoredProcedure,
-                Connection = (connection as OracleConnectionAdapter).Connection
+                Connection = (connection as OracleConnectionAdapter)?.Connection
             };
 
 
             foreach (var parameter in parameters)
-                command.Parameters.Add((parameter as OracleParameterAdapter).Parameter);
+                command.Parameters.Add((parameter as OracleParameterAdapter)?.Parameter);
             return getDataSet(command);
         }
 
@@ -42,7 +42,7 @@ namespace InfraDal
             var command = new OracleCommand
             {
                 CommandText = query,
-                Connection = (connection as OracleConnectionAdapter).Connection
+                Connection = (connection as OracleConnectionAdapter)?.Connection
             };
             return getDataSet(command);
         }

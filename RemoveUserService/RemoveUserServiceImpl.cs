@@ -21,7 +21,7 @@ namespace RemoveUserService
         public Response RemoveUser(RemoveUserRequest request)
         {
             Response response = new RemoveUserResponseOk(request);
-            var user = _drawingDal.GetUser(new SignInRequest() { LoginDto = new LoginDTO() { Email = request.UserId } });
+            var user = _drawingDal.GetUser(new SignInRequest() { LoginDto = new LoginDto() { Email = request.UserId } });
             if (user.Tables[0].Rows.Count == 0)
             {
                 response = new RemoveUserNoUserFoundResponse(request);

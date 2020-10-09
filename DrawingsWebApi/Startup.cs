@@ -67,7 +67,6 @@ namespace DrawingsWebApi
                             if (result.MessageType == WebSocketMessageType.Close)
                             {
                                 await manager.OnDisconnected(docId, userId);
-                                return;
                             }
 
                         });
