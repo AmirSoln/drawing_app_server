@@ -32,6 +32,7 @@
     <ProjectReference Include="..\DrawingContracts\DrawingContracts.csproj" />
     <ProjectReference Include="..\DrawingDal\DrawingDal.csproj" />
     <ProjectReference Include="..\SignUpService\SignUpService.csproj" />
+    <ProjectReference Include="..\TestingUtilities\TestingUtilities.csproj" />
   </ItemGroup>
 
 </Project>

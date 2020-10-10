@@ -31,9 +31,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SocketService", "SocketServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DocumentServiceTesting", "DocumentServiceTesting\DocumentServiceTesting.csproj", "{4623CFF9-714A-4D04-B585-FB80954AEC20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignUpServiceTests", "SignUpServiceTests\SignUpServiceTests.csproj", "{0374C518-023D-44B8-B9C4-17043FF8EAC1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignUpServiceTests", "SignUpServiceTests\SignUpServiceTests.csproj", "{0374C518-023D-44B8-B9C4-17043FF8EAC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoveUserServiceTests", "RemoveUserServiceTests\RemoveUserServiceTests.csproj", "{9E29DA45-4DCB-4A6E-AC71-9F09FDDBA34C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RemoveUserServiceTests", "RemoveUserServiceTests\RemoveUserServiceTests.csproj", "{9E29DA45-4DCB-4A6E-AC71-9F09FDDBA34C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkerServiceTests", "MarkerServiceTests\MarkerServiceTests.csproj", "{1AF9047E-8927-407F-B222-5F6473540507}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingUtilities", "TestingUtilities\TestingUtilities.csproj", "{F21EDA5A-507F-4888-A58E-4415D30110EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +109,14 @@ Global
 		{9E29DA45-4DCB-4A6E-AC71-9F09FDDBA34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9E29DA45-4DCB-4A6E-AC71-9F09FDDBA34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9E29DA45-4DCB-4A6E-AC71-9F09FDDBA34C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AF9047E-8927-407F-B222-5F6473540507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AF9047E-8927-407F-B222-5F6473540507}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AF9047E-8927-407F-B222-5F6473540507}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AF9047E-8927-407F-B222-5F6473540507}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

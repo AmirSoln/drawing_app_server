@@ -6,13 +6,12 @@ using DocumentService;
 using DrawingContracts.Dto.Documents;
 using DrawingContracts.Interface;
 using DrawingDal;
-using InfraDal;
-using InfraDalContracts;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
 using SignUpService;
+using TestingUtilities;
 
 namespace DocumentServiceTesting
 {
@@ -22,8 +21,8 @@ namespace DocumentServiceTesting
         private IConfiguration _configuration;
         private ISignUpService _signUpService;
         private IDrawingDal _drawingDal;
-        private InfraDalImpl _infraDal;
-        private IDbConnection _connection;
+        private TestUtilitiesImpl _testUtilitiesImpl;
+        private List<string> _createdUsers;
 
         [OneTimeSetUp]
         public void FirstSetup()
@@ -33,24 +32,28 @@ namespace DocumentServiceTesting
                 .Build();
 
             var strConn = _configuration.GetConnectionString("mainDb");
-            _infraDal = new InfraDalImpl();
-            _connection = _infraDal.Connect(strConn);
+            _testUtilitiesImpl = new TestUtilitiesImpl(strConn);
+            _drawingDal = new DrawingDalImpl(_configuration);
+            _signUpService = new SignUpServiceImpl(_drawingDal);
+            _createdUsers = _testUtilitiesImpl.CreateUserDummyData(_signUpService, 1);
+        }
+
+        [OneTimeTearDown]
+        public void FinalTearDown()
+        {
+            _testUtilitiesImpl.DestroyUserDummyData(_createdUsers.ToArray());
         }
 
         [SetUp]
         public void Setup()
         {
-            _drawingDal = new DrawingDalImpl(_configuration);
             _documentService = new DocumentServiceImpl(_drawingDal);
-            _signUpService = new SignUpServiceImpl(_drawingDal);
         }
 
         [TearDown]
         public void TearDown()
         {
             _documentService = null;
-            _signUpService = null;
-            _drawingDal = null;
         }
 
         [TestCase("35")]
@@ -60,8 +63,10 @@ namespace DocumentServiceTesting
         public void TestGetDocumentByNonExistingId_GetDocumentResponseInvalidId(string id)
         {
             var expectedType = typeof(GetDocumentResponseInvalidId);
+            const int dataCount = 5;
             //given a database with some demo data
-            var dummyData = CreateDummyData(3);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
 
             //when we try to get a document with non existing id
             var result = _documentService.GetDocumentById(id);
@@ -69,7 +74,7 @@ namespace DocumentServiceTesting
             //then we get GetDocumentResponseInvalidId as a response
             Assert.IsInstanceOf(expectedType, result);
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
         [Test]
@@ -85,7 +90,8 @@ namespace DocumentServiceTesting
                 .Verifiable();
 
             //given a database with some demo data
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
 
             //when we try to get a document with non existing id
             var result = mock.Object.GetDocumentById(dummyData[random.Next(dataCount)]);
@@ -100,7 +106,7 @@ namespace DocumentServiceTesting
 
             mock.VerifyAll();
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
         [TestCase("35")]
@@ -113,7 +119,8 @@ namespace DocumentServiceTesting
             const int dataCount = 5;
 
             //given a database with some demo data
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
 
             //when we try to delete a document with non existing id
             var request = new DeleteDocumentRequest() { DocId = id };
@@ -122,7 +129,7 @@ namespace DocumentServiceTesting
             //then we get DeleteDocumentInvalidIdResponse as a response
             Assert.That(result, Is.InstanceOf(expectedType));
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
         [Test]
@@ -137,9 +144,10 @@ namespace DocumentServiceTesting
                 .Verifiable();
 
             //given a database with some demo data
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
             var ownerDocCount =
-                ((GetAllDocumentsResponseOk)_documentService.GetAllDocuments("DUMMY.MAIL@DUMMY"))
+                ((GetAllDocumentsResponseOk)_documentService.GetAllDocuments(TestUtilitiesImpl.UserPrefix + "0"))
                 .Documents.Count();
 
             //when we try to get a delete with an existing id
@@ -152,13 +160,13 @@ namespace DocumentServiceTesting
             {
                 Assert.That(result, Is.InstanceOf(expectedType));
                 Assert.That(((GetAllDocumentsResponseOk)_documentService
-                        .GetAllDocuments("DUMMY.MAIL@DUMMY"))
+                        .GetAllDocuments(TestUtilitiesImpl.UserPrefix + "0"))
                     .Documents.Count(), Is.EqualTo(ownerDocCount - 1));
             });
 
             mock.VerifyAll();
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
         [TestCase("35")]
@@ -171,7 +179,8 @@ namespace DocumentServiceTesting
             const int dataCount = 5;
 
             //given a database with some demo data
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
 
             //when we try to get all documents with non existing id
             var result = _documentService.GetAllDocuments(id);
@@ -184,18 +193,17 @@ namespace DocumentServiceTesting
                 Assert.That(((GetAllDocumentsResponseOk)result).Documents.Count(), Is.Zero);
             });
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
-        [TestCase("DUMMY.MAIL@DUMMY",5)]
-        [TestCase("DUMMY.MAIL@DUMMY",15)]
-        [TestCase("DUMMY.MAIL@DUMMY",0)]
-        public void TestGetAllDocumentsOfExistingOwner_GetAllDocumentsResponseOkSomeResults(string id,int dataCount)
+        [TestCaseSource(nameof(GetAllDocumentsOfExistingOwner))]
+        public void TestGetAllDocumentsOfExistingOwner_GetAllDocumentsResponseOkSomeResults(string id, int dataCount)
         {
             var expectedType = typeof(GetAllDocumentsResponseOk);
 
             //given a database with some demo data
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl
+                .CreateDocumentDummyData(_documentService, dataCount, _createdUsers[0]);
 
             //when we try to get all documents with non existing id
             var result = _documentService.GetAllDocuments(id);
@@ -208,31 +216,18 @@ namespace DocumentServiceTesting
                 Assert.That(((GetAllDocumentsResponseOk)result).Documents.Count(), Is.EqualTo(dataCount));
             });
 
-            DeleteDummyData(dummyData);
+            _testUtilitiesImpl.DeleteDocumentDummyData(dummyData, _documentService);
         }
 
-        private void DeleteDummyData(List<string> ids)
+        public static IEnumerable<TestCaseData> GetAllDocumentsOfExistingOwner
         {
-            foreach (var id in ids)
+            get
             {
-                _documentService.DeleteDocumentById(new DeleteDocumentRequest { DocId = id });
+                yield return new TestCaseData(TestUtilitiesImpl.UserPrefix + "0", 5);
+                yield return new TestCaseData(TestUtilitiesImpl.UserPrefix + "0", 15);
+                yield return new TestCaseData(TestUtilitiesImpl.UserPrefix + "0", 0);
             }
         }
 
-        private List<string> CreateDummyData(int count)
-        {
-            var docIdList = new List<string>();
-            //var userResponse = 
-            //    _signUpService.SignUp(new SignUpRequest {Login = new LoginDto {Email = "DUMMY.MAIL@DUMMY", Username = "DUMMY"}});
-            //var user = ((SignUpResponseOk) userResponse).SignUpRequest.Login;
-            for (int index = 0; index < count; index++)
-            {
-                _documentService.UploadDocument("DUMMY_DEMO_DOC" + index, "PATH" + index, "DUMMY.MAIL@DUMMY");
-            }
-
-            var docs = _documentService.GetAllDocuments("DUMMY.MAIL@DUMMY") as GetAllDocumentsResponseOk;
-            docIdList.AddRange(docs?.Documents.Select(doc => doc.DocId));
-            return docIdList;
-        }
     }
 }

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DrawingContracts\DrawingContracts.csproj" />
+    <ProjectReference Include="..\InfraDalContracts\InfraDalContracts.csproj" />
+    <ProjectReference Include="..\InfraDal\InfraDal.csproj" />
+  </ItemGroup>
+
+</Project>

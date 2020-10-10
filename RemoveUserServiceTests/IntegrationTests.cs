@@ -1,17 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using DrawingContracts.Dto;
 using DrawingContracts.Dto.RemoveUser;
-using DrawingContracts.Dto.SignUp;
 using DrawingContracts.Interface;
 using DrawingDal;
-using InfraDal;
-using InfraDalContracts;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using RemoveUserService;
 using SignUpService;
+using TestingUtilities;
 
 namespace RemoveUserServiceTests
 {
@@ -20,9 +15,8 @@ namespace RemoveUserServiceTests
         private IDrawingDal _drawingDal;
         private IConfiguration _configuration;
         private ISignUpService _signUpService;
-        private InfraDalImpl _infraDal;
-        private IDbConnection _connection;
         private IRemoveUserService _removeUserService;
+        private TestUtilitiesImpl _testUtilitiesImpl;
 
         [OneTimeSetUp]
         public void FirstSetup()
@@ -32,8 +26,7 @@ namespace RemoveUserServiceTests
                 .Build();
 
             var strConn = _configuration.GetConnectionString("mainDb");
-            _infraDal = new InfraDalImpl();
-            _connection = _infraDal.Connect(strConn);
+            _testUtilitiesImpl = new TestUtilitiesImpl(strConn);
             _drawingDal = new DrawingDalImpl(_configuration);
             _signUpService = new SignUpServiceImpl(_drawingDal);
         }
@@ -60,7 +53,7 @@ namespace RemoveUserServiceTests
             var expectedType = typeof(RemoveUserNoUserFoundResponse);
 
             //given a db with some users
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl.CreateUserDummyData(_signUpService,dataCount);
 
             //when we try to remove a user with non existing user id (mark as removed)
             var request = new RemoveUserRequest() { UserId = id };
@@ -69,7 +62,7 @@ namespace RemoveUserServiceTests
             //then we get RemoveUserNoUserFoundResponse
             Assert.That(result, Is.TypeOf(expectedType));
 
-            DestroyDummyData(dummyData);
+            _testUtilitiesImpl.DestroyUserDummyData(dummyData.ToArray());
         }
 
         [Test]
@@ -80,7 +73,7 @@ namespace RemoveUserServiceTests
             var random = new Random();
 
             //given a db with some users
-            var dummyData = CreateDummyData(dataCount);
+            var dummyData = _testUtilitiesImpl.CreateUserDummyData(_signUpService,dataCount);
 
             //when we try to remove a user with non existing user id (mark as removed)
             var request = new RemoveUserRequest() { UserId = dummyData[random.Next(dataCount)] };
@@ -91,46 +84,11 @@ namespace RemoveUserServiceTests
             Assert.Multiple(() =>
             {
                 Assert.That(result, Is.TypeOf(expectedType));
-                Assert.That(GetUserById(request.UserId), Is.False);
+                Assert.That(_testUtilitiesImpl.GetUserById(request.UserId), Is.False);
 
             });
 
-            DestroyDummyData(dummyData);
-        }
-
-        private bool GetUserById(string requestUserId)
-        {
-            var dataSet = _infraDal.ExecuteQuery(_connection,
-                        "SELECT ACTIVE FROM USERS WHERE USER_ID ='" + requestUserId + "'");
-            var data = dataSet.Tables[0].Rows[0][0];
-            return Convert.ToBoolean(data);
-        }
-
-        private List<string> CreateDummyData(int dataCount)
-        {
-            var retval = new List<string>();
-            for (int i = 0; i < dataCount; i++)
-            {
-                var userResponse =
-                    _signUpService.SignUp(new SignUpRequest { Login = new LoginDto { Email = "DUMMY.MAIL@DUMMY" + i, Username = "DUMMY" + i } });
-                retval.Add(((SignUpResponseOk)userResponse).SignUpRequest.Login.Email);
-            }
-
-            return retval;
-        }
-
-        private void DestroyDummyData(List<string> ids)
-        {
-            var query = new StringBuilder();
-            query.Append("DELETE FROM ").Append("USERS ").Append("WHERE USERS.USER_ID IN (");
-            foreach (var id in ids)
-            {
-                query.Append("'").Append(id).Append("'").Append(",");
-            }
-
-            query.Length--;
-            query.Append(")");
-            _infraDal.ExecuteQuery(_connection, query.ToString());
+            _testUtilitiesImpl.DestroyUserDummyData(dummyData.ToArray());
         }
     }
 }
