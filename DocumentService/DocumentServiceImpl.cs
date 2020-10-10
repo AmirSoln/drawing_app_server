@@ -45,7 +45,7 @@ namespace DocumentService
                 {
                     var row = document.Tables[0].Rows[0];
                     response = new GetDocumentResponseOk(ConvertRowToDocumentObject(row));
-                    AddFileToResponse(response);
+                    ((GetDocumentResponseOk)response).Image = GetFileBytes(((GetDocumentResponseOk) response).Doc.DocUrl);
                 }
                 else
                 {
@@ -60,11 +60,9 @@ namespace DocumentService
             return response;
         }
 
-        private void AddFileToResponse(Response response)
+        protected virtual byte[] GetFileBytes(string docUrl)
         {
-            var castResponse = (GetDocumentResponseOk)response;
-            var bytes = File.ReadAllBytes(castResponse.Doc.DocUrl);
-            ((GetDocumentResponseOk)response).Image = bytes;
+            return File.ReadAllBytes(docUrl);
         }
 
         public Response DeleteDocumentById(DeleteDocumentRequest request)
@@ -72,9 +70,18 @@ namespace DocumentService
             Response response = new DeleteDocumentResponseOk(request);
             try
             {
-                var fileName = ConvertRowToDocumentObject(_drawingDal.GetDocumentById(request.DocId).Tables[0].Rows[0]).DocUrl;
-                _drawingDal.DeleteDocument(request);
-                TryDeletingFile(fileName);
+                var document = _drawingDal.GetDocumentById(request.DocId);
+                if (document.Tables[0].Rows.Count == 1)
+                {
+                    var fileName =
+                        ConvertRowToDocumentObject(document.Tables[0].Rows[0]).DocUrl;
+                    _drawingDal.DeleteDocument(request);
+                    TryDeletingFile(fileName);
+                }
+                else
+                {
+                    response = new DeleteDocumentInvalidIdResponse();
+                }
             }
             catch (Exception e)
             {
@@ -85,7 +92,7 @@ namespace DocumentService
             return response;
         }
 
-        private static void TryDeletingFile(string document)
+        protected virtual void TryDeletingFile(string document)
         {
             try
             {
