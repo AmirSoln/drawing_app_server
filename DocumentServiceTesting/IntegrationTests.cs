@@ -6,6 +6,8 @@ using DocumentService;
 using DrawingContracts.Dto.Documents;
 using DrawingContracts.Interface;
 using DrawingDal;
+using InfraDal;
+using InfraDalContracts;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
@@ -20,14 +22,24 @@ namespace DocumentServiceTesting
         private IConfiguration _configuration;
         private ISignUpService _signUpService;
         private IDrawingDal _drawingDal;
+        private InfraDalImpl _infraDal;
+        private IDbConnection _connection;
 
-        [SetUp]
-        public void Setup()
+        [OneTimeSetUp]
+        public void FirstSetup()
         {
             _configuration = new ConfigurationBuilder()
                 .AddJsonFile("test.appsettings.json")
                 .Build();
 
+            var strConn = _configuration.GetConnectionString("mainDb");
+            _infraDal = new InfraDalImpl();
+            _connection = _infraDal.Connect(strConn);
+        }
+
+        [SetUp]
+        public void Setup()
+        {
             _drawingDal = new DrawingDalImpl(_configuration);
             _documentService = new DocumentServiceImpl(_drawingDal);
             _signUpService = new SignUpServiceImpl(_drawingDal);
