@@ -49,7 +49,6 @@ namespace DocumentServiceTesting
         public void TearDown()
         {
             _documentService = null;
-            _configuration = null;
             _signUpService = null;
             _drawingDal = null;
         }

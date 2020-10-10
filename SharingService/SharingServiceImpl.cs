@@ -103,24 +103,6 @@ namespace SharingService
             });
         }
 
-        //public Response GetSharedUsersOfDocument(SharedUsersOfDocumentRequest request)
-        //{
-        //    Response response = new GetSharedUsersOfDocumentResponseOk(request);
-        //    try
-        //    {
-        //        var results = _drawingDal.GetSharedUserByDocumentId(request.DocId);
-        //        var allUsers = results.Tables[0].AsEnumerable()
-        //            .Select(ConvertRowToUserObject).Where(obj => obj.IsActive);
-        //        ((GetSharedUsersOfDocumentResponseOk)response).Users = allUsers;
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        response = new AppResponseError(e.Message);
-        //    }
-
-        //    return response;
-        //}
-
         private Document ConvertRowToDocumentObject(DataRow row)
         {
             return new Document()
