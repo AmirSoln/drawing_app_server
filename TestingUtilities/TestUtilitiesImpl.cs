@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using DrawingContracts.Dto;
 using DrawingContracts.Dto.Documents;
+using DrawingContracts.Dto.Markers;
 using DrawingContracts.Dto.SignUp;
 using DrawingContracts.Interface;
 using InfraDal;
@@ -78,6 +79,40 @@ namespace TestingUtilities
             var docs = documentService.GetAllDocuments(userId) as GetAllDocumentsResponseOk;
             docIdList.AddRange(docs?.Documents.Select(doc => doc.DocId));
             return docIdList;
+        }
+
+        public void DestroyMarkersDummyData(IMarkerService markerService,params string[] ids)
+        {
+            foreach (var id in ids)
+            {
+                markerService.DeleteMarker(new DeleteMarkerRequest {MarkerId = id});
+            }
+        }
+
+        public Marker GetMarkerData(string docId, string docOwner, EMarkerType markerType, string color = "black", string pos = "x=100,y=100,w=2,h=4")
+        {
+            return new Marker
+            {
+                DocId = docId,
+                Color = color,
+                MarkerType = markerType,
+                OwnerUser = docOwner,
+                Position = pos
+            };
+        }
+
+        public List<string> CreateDummyMarkerData(IMarkerService markerService, int dataCount,string docId,string docOwner)
+        {
+            var retval = new List<string>();
+            for (int i = 0; i < dataCount; i++)
+            {
+                var marker = GetMarkerData(docId, docOwner, EMarkerType.Ellipse);
+                var request = new CreateMarkerRequest { Marker = marker };
+                var result = markerService.CreateMarker(request) as CreateMarkerResponseOk;
+                retval.Add(result?.Request.Marker.MarkerId);
+            }
+
+            return retval;
         }
     }
 }
