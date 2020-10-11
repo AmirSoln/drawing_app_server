@@ -74,6 +74,21 @@ namespace MarkerService
             }
             return response;
         }
+
+        public Response EditMarkerById(EditMarkerRequest request)
+        {
+            Response response = new EditMarkerResponseOk(request);
+            try
+            {
+                _drawingDal.EditMarkerById(request);
+            }
+            catch (Exception e)
+            {
+                response = new AppResponseError(e.Message);
+            }
+            return response;
+        }
+
         private EMarkerType TryParseMarker(string marker)
         {
             Enum.TryParse<EMarkerType>(marker, out var markerType);

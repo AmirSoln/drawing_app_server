@@ -154,5 +154,13 @@ namespace DrawingDal
 
             return _infraDal.ExecuteSpQuery(_connection, "GET_SHARED_USERS_OF_DOCUMENT", paramDocId, outParam);
         }
+
+        public void EditMarkerById(EditMarkerRequest request)
+        {
+            var paramMarkerId = _infraDal.GetParameter("P_MARKER_ID", request.MarkerId);
+            var paramColor = _infraDal.GetParameter("P_COLOR", request.Color);
+
+            _infraDal.ExecuteSpQuery(_connection, "EDIT_MARKER", paramMarkerId,paramColor);
+        }
     }
 }

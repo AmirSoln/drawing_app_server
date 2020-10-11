@@ -8,5 +8,6 @@ namespace DrawingContracts.Interface
         Response CreateMarker(CreateMarkerRequest request);
         Response DeleteMarker(DeleteMarkerRequest request);
         Response GetAllMarkers(string documentId);
+        Response EditMarkerById(EditMarkerRequest request);
     }
 }

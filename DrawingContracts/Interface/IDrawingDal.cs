@@ -23,5 +23,6 @@ namespace DrawingContracts.Interface
         void ShareDocument(ShareDocumentRequest request);
         DataSet GetAllUsers();
         DataSet GetSharedUserByDocumentId(string requestDocId);
+        void EditMarkerById(EditMarkerRequest request);
     }
 }

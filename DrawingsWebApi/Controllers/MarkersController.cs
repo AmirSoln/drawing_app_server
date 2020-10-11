@@ -10,7 +10,7 @@ namespace DrawingsWebApi.Controllers
     [ApiController]
     public class MarkersController : ControllerBase
     {
-        private IMarkerService _markerService;
+        private readonly IMarkerService _markerService;
 
         public MarkersController(IMarkerService markerService)
         {
@@ -31,6 +31,13 @@ namespace DrawingsWebApi.Controllers
         public Response CreateMarker([FromBody] CreateMarkerRequest request)
         {
             return _markerService.CreateMarker(request);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public Response EditMarkerById([FromBody] EditMarkerRequest request)
+        {
+            return _markerService.EditMarkerById(request);
         }
 
         // POST api/<MarkersController>/DeleteMarker
