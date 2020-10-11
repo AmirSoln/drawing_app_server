@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MarkerServiceTests", "Marke
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestingUtilities", "TestingUtilities\TestingUtilities.csproj", "{F21EDA5A-507F-4888-A58E-4415D30110EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharingServiceTests", "SharingServiceTests\SharingServiceTests.csproj", "{2982D55E-BFBD-46E9-95AE-211BBBAC897A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,10 @@ Global
 		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F21EDA5A-507F-4888-A58E-4415D30110EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2982D55E-BFBD-46E9-95AE-211BBBAC897A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2982D55E-BFBD-46E9-95AE-211BBBAC897A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2982D55E-BFBD-46E9-95AE-211BBBAC897A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2982D55E-BFBD-46E9-95AE-211BBBAC897A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
